@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  database_pagarme:
+    image: postgres
+    container_name: database_pagarme
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=pagarmesimulator
+      - POSTGRES_DB=pagarme
+    volumes:
+      - pgdata:/data/postgres
+
+  app:
+    build: .
+    container_name: pagarme
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/app
+    links:
+      - database_pagarme
+    depends_on:
+      - database_pagarme
+
+volumes:
+  pgdata:
+    driver: local
